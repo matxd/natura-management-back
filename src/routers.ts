@@ -1,12 +1,10 @@
 import { Router } from "express";
-import peopleController from "./controllers/peopleController";
-import animalController from "./controllers/animalController";
-import adoptionController from "./controllers/adoptionController";
+import productController from "./controllers/productController";
+import authController from "./controllers/authController";
 
 const routers = Router();
 
-routers.use("/people", peopleController);
-routers.use("/animal", animalController);
-routers.use("/adoption", adoptionController);
+routers.use("/product", productController);
+routers.use("/auth", authController);
 
 export default routers;

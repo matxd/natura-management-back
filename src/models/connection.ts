@@ -1,10 +1,18 @@
-import mysql from "mysql2/promise";
-import dotenv from "dotenv";
-dotenv.config();
+import * as mongoDB from "mongodb";
+import * as dotenv from "dotenv";
 
-export default mysql.createPool({
-  host: process.env.DB_HOSTNAME,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_DATABASE,
-});
+export async function connection() {
+  dotenv.config();
+
+  const DB_DATABASE: string = process.env.DB_DATABASE
+    ? process.env.DB_DATABASE
+    : "";
+
+  const client: mongoDB.MongoClient = new mongoDB.MongoClient(DB_DATABASE);
+
+  await client.connect();
+
+  const db: mongoDB.Db = client.db(process.env.DB_NAME);
+
+  return db;
+}
