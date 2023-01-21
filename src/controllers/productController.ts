@@ -5,10 +5,20 @@ import productService from "../services/productService";
 import authenticateMiddleware from "../middlewares/authMiddleware";
 
 productController.get(
-  "/",
-  async (_req: Request, res: Response): Promise<Response> => {
-    const products = await productService.getAll();
-    return res.status(200).json(products);
+  "/listar",
+  async (req: Request, res: Response): Promise<Response> => {
+    const page: string = req.query.page as string;
+    const size: string = req.query.size as string;
+    if (!page || !size)
+      return res.status(404).json({ message: "Nada encontrado!" });
+    else {
+      console.log(size, page);
+      const products = await productService.getAll(
+        parseInt(size),
+        parseInt(page)
+      );
+      return res.status(200).json(products);
+    }
   }
 );
 

@@ -2,8 +2,8 @@ import { IProduct } from "./../interfaces/productInterface";
 import HttpException from "../utils/httpException";
 import productModel from "../models/productModel";
 
-const getAll = async () => {
-  const products = await productModel.getAll();
+const getAll = async (size: number, page: number) => {
+  const products = await productModel.getAll(size, page);
   return products;
 };
 

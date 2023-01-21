@@ -7,9 +7,16 @@ const productCollection = async () => {
   return db.collection("product");
 };
 
-const getAll = async () => {
+const getAll = async (size: number, page: number) => {
   const db = await productCollection();
-  return await db.find().toArray();
+  const totalItems = await db.countDocuments();
+  const totalPages = totalItems / size - 1;
+  const items = await db
+    .find()
+    .skip(page * size)
+    .limit(size)
+    .toArray();
+  return { totalItems, totalPages, size, page, items };
 };
 
 const getById = async (id: string) => {
