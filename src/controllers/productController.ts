@@ -6,6 +6,7 @@ import authenticateMiddleware from "../middlewares/authMiddleware";
 
 productController.get(
   "/listar",
+  authenticateMiddleware,
   async (req: Request, res: Response): Promise<Response> => {
     const page: string = req.query.page as string;
     const size: string = req.query.size as string;
