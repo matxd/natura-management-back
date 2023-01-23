@@ -4,7 +4,7 @@ import authController from "./controllers/authController";
 
 const routers = Router();
 
-routers.use("/product", productController);
-routers.use("/auth", authController);
+routers.use("/produtos", productController);
+routers.use("/autenticacao", authController);
 
 export default routers;

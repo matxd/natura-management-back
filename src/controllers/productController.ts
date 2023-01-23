@@ -9,30 +9,23 @@ productController.get(
   async (req: Request, res: Response): Promise<Response> => {
     const page: string = req.query.page as string;
     const size: string = req.query.size as string;
+    const name: string = req.query.name as string;
     if (!page || !size)
       return res.status(404).json({ message: "Nada encontrado!" });
     else {
-      console.log(size, page);
-      const products = await productService.getAll(
+      console.log(size, page, name);
+      const products = await productService.findAll(
         parseInt(size),
-        parseInt(page)
+        parseInt(page),
+        name
       );
       return res.status(200).json(products);
     }
   }
 );
 
-productController.get(
-  "/:id",
-  async (req: Request, res: Response): Promise<Response> => {
-    const { id } = req.params;
-    const product = await productService.getById(id);
-    return res.status(200).json(product);
-  }
-);
-
 productController.post(
-  "/",
+  "/cadastrar",
   authenticateMiddleware,
   async (req: Request, res: Response): Promise<Response> => {
     const product: IProduct = req.body;
@@ -42,12 +35,23 @@ productController.post(
 );
 
 productController.delete(
-  "/:id",
+  "/delete/:id",
   authenticateMiddleware,
   async (req: Request, res: Response): Promise<Response> => {
     const { id } = req.params;
     const removed = await productService.remove(id);
     return res.status(202).json({ message: removed });
+  }
+);
+
+productController.put(
+  "/editar/:id",
+  authenticateMiddleware,
+  async (req: Request, res: Response): Promise<Response> => {
+    const { id } = req.params;
+    const product: IProduct = req.body;
+    const result = await productService.updateProduct(id, product);
+    return res.status(202).json({ message: result });
   }
 );
 

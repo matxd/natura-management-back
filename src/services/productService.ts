@@ -2,18 +2,18 @@ import { IProduct } from "./../interfaces/productInterface";
 import HttpException from "../utils/httpException";
 import productModel from "../models/productModel";
 
-const getAll = async (size: number, page: number) => {
-  const products = await productModel.getAll(size, page);
+const findAll = async (size: number, page: number, name?: string) => {
+  const products = await productModel.findAll(size, page, name);
   return products;
 };
 
-const getById = async (id: string) => {
-  const product = await productModel.getById(id);
-  return product;
-};
-
 const createProduct = async (product: IProduct) => {
-  return await productModel.createProduct(product);
+  product.name = product.name.toLowerCase();
+  const exist = await productModel.findByName(product.name);
+  if (exist) throw new HttpException(409, "Produto já existe!");
+  else {
+    return await productModel.createProduct(product);
+  }
 };
 
 const remove = async (id: string) => {
@@ -22,4 +22,14 @@ const remove = async (id: string) => {
   else return "Produto removido com sucesso!";
 };
 
-export default { getAll, getById, createProduct, remove };
+const updateProduct = async (id: string, product: IProduct) => {
+  const idExist = await productModel.findById(id);
+
+  if (!idExist) throw new HttpException(404, "Produto não encontrado!");
+  const result = await productModel.updateProduct(id, product);
+
+  if (result) return "Produto editado com sucesso!";
+  else throw new HttpException(404, "Não foi possivel editar o produto!");
+};
+
+export default { findAll, createProduct, remove, updateProduct };

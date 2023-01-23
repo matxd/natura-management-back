@@ -7,19 +7,27 @@ const productCollection = async () => {
   return db.collection("product");
 };
 
-const getAll = async (size: number, page: number) => {
+const findAll = async (size: number, page: number, name?: string) => {
   const db = await productCollection();
-  const totalItems = await db.countDocuments();
-  const totalPages = totalItems / size - 1;
+
+  const totalItems = await db.countDocuments(name ? { name: name } : {});
+  let totalPages = totalItems / size;
+  totalPages = totalPages < 1 ? 1 : totalPages;
   const items = await db
-    .find()
+    .find(name ? { name: name } : {}, { sort: "name" })
     .skip(page * size)
     .limit(size)
     .toArray();
+
   return { totalItems, totalPages, size, page, items };
 };
 
-const getById = async (id: string) => {
+const findByName = async (name: string) => {
+  const db = await productCollection();
+  return await db.findOne({ name: name });
+};
+
+const findById = async (id: string) => {
   const db = await productCollection();
   return await db.findOne({ _id: new ObjectId(id) });
 };
@@ -35,4 +43,22 @@ const remove = async (id: string) => {
   return deletedCount;
 };
 
-export default { getAll, getById, createProduct, remove };
+const updateProduct = async (id: string, product: IProduct) => {
+  const db = await productCollection();
+
+  const result = await db.updateOne(
+    { _id: new ObjectId(id) },
+    { $set: product }
+  );
+
+  return result.modifiedCount;
+};
+
+export default {
+  findAll,
+  findById,
+  createProduct,
+  remove,
+  findByName,
+  updateProduct,
+};

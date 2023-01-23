@@ -1,14 +1,8 @@
-interface IWebsites {
-  name: string;
-  link: string;
-  price: number;
-}
-
 export interface IProduct {
   name: string;
-  title: string;
-  description: string;
+  genre: string;
+  amountStorage: number;
+  price: string;
   image: string;
   status: boolean;
-  websites: IWebsites[];
 }
