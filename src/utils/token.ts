@@ -28,7 +28,7 @@ class Token {
 
     try {
       const validateJwt = jwt.verify(token, SECRET, this.jwtConfig);
-      return validateJwt;
+      return { validateJwt };
     } catch (error) {
       throw new HttpException(401, "Acesso inválido ou expirado!");
     }

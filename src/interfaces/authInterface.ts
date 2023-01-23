@@ -6,5 +6,5 @@ export interface IAuth {
 export interface IToken {
   name: string;
   email: string;
-  role: string;
+  id: string;
 }

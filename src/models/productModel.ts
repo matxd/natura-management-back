@@ -2,13 +2,18 @@ import { IProduct } from "./../interfaces/productInterface";
 import { connection } from "./connection";
 import { ObjectId } from "mongodb";
 
-const productCollection = async () => {
+const productCollection = async (id: string) => {
   const db = await connection();
-  return db.collection("product");
+  return db.collection("product" + id);
 };
 
-const findAll = async (size: number, page: number, name?: string) => {
-  const db = await productCollection();
+const findAll = async (
+  size: number,
+  page: number,
+  idUser: string,
+  name?: string
+) => {
+  const db = await productCollection(idUser);
 
   const totalItems = await db.countDocuments(name ? { name: name } : {});
   let totalPages = totalItems / size;
@@ -22,29 +27,29 @@ const findAll = async (size: number, page: number, name?: string) => {
   return { totalItems, totalPages, size, page, items };
 };
 
-const findByName = async (name: string) => {
-  const db = await productCollection();
+const findByName = async (name: string, idUser: string) => {
+  const db = await productCollection(idUser);
   return await db.findOne({ name: name });
 };
 
-const findById = async (id: string) => {
-  const db = await productCollection();
+const findById = async (id: string, idUser: string) => {
+  const db = await productCollection(idUser);
   return await db.findOne({ _id: new ObjectId(id) });
 };
 
-const createProduct = async (product: IProduct) => {
-  const db = await productCollection();
+const createProduct = async (product: IProduct, id: string) => {
+  const db = await productCollection(id);
   return await db.insertOne(product);
 };
 
-const remove = async (id: string) => {
-  const db = await productCollection();
+const remove = async (id: string, idUser: string) => {
+  const db = await productCollection(idUser);
   const { deletedCount } = await db.deleteOne({ _id: new ObjectId(id) });
   return deletedCount;
 };
 
-const updateProduct = async (id: string, product: IProduct) => {
-  const db = await productCollection();
+const updateProduct = async (id: string, product: IProduct, idUser: string) => {
+  const db = await productCollection(idUser);
 
   const result = await db.updateOne(
     { _id: new ObjectId(id) },
