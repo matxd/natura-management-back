@@ -19,7 +19,9 @@ const findAll = async (
   let totalPages = totalItems / size;
   totalPages = totalPages < 1 ? 1 : totalPages;
   const items = await db
-    .find(name ? { name: name } : {}, { sort: "name" })
+    .find(name ? { name: { $regex: name, $options: "i" } } : {}, {
+      sort: "name",
+    })
     .skip(page * size)
     .limit(size)
     .toArray();
