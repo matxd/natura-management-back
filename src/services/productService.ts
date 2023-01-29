@@ -9,13 +9,9 @@ const findAll = async (
   token: string,
   name?: string
 ) => {
-  const products = await productModel.findAll(
-    size,
-    page,
-    decodeToken(token),
-    name
-  );
-  return products;
+  if (name) name = name.toLowerCase();
+
+  return await productModel.findAll(size, page, decodeToken(token), name);
 };
 
 const createProduct = async (product: IProduct, token: string) => {

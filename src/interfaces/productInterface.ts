@@ -3,6 +3,6 @@ export interface IProduct {
   genre: string;
   amountStorage: number;
   price: string;
-  image: string;
+  image?: string;
   status: boolean;
 }

@@ -3,6 +3,7 @@ import { Request, Response, Router } from "express";
 const productController = Router();
 import productService from "../services/productService";
 import authenticateMiddleware from "../middlewares/authMiddleware";
+import imageMiddleware from "../middlewares/imageMiddleware";
 
 productController.get(
   "/listar",
@@ -29,11 +30,17 @@ productController.get(
 productController.post(
   "/cadastrar",
   authenticateMiddleware,
+  imageMiddleware.single("image"),
   async (req: Request, res: Response): Promise<Response> => {
     const token = req.headers.authorization || "";
-    const product: IProduct = req.body;
-    await productService.createProduct(product, token);
-    return res.status(201).json({ message: "Produto salvo com sucesso!" });
+    const product: IProduct = JSON.parse(req.body.data);
+    const image: Express.Multer.File | undefined = req.file;
+    if (image) {
+      product.image =
+        "data:image/png;base64," + new Buffer(image?.buffer).toString("base64");
+      await productService.createProduct(product, token);
+      return res.status(201).json({ message: "Produto salvo com sucesso!" });
+    } else return res.status(400).json({ message: "Algo deu errado!" });
   }
 );
 
@@ -51,12 +58,21 @@ productController.delete(
 productController.put(
   "/editar/:id",
   authenticateMiddleware,
+  imageMiddleware.single("image"),
   async (req: Request, res: Response): Promise<Response> => {
     const token = req.headers.authorization || "";
     const { id } = req.params;
-    const product: IProduct = req.body;
-    const result = await productService.updateProduct(id, product, token);
-    return res.status(202).json({ message: result });
+    const product: IProduct = JSON.parse(req.body.data);
+    const image: Express.Multer.File | undefined = req.file;
+    if (image) {
+      product.image =
+        "data:image/png;base64," + new Buffer(image?.buffer).toString("base64");
+      const result = await productService.updateProduct(id, product, token);
+      return res.status(202).json({ message: result });
+    } else {
+      const result = await productService.updateProduct(id, product, token);
+      return res.status(202).json({ message: result });
+    }
   }
 );
 

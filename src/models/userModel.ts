@@ -1,9 +1,27 @@
+import { IUser } from "./../interfaces/userInterface";
 import { connection } from "./connection";
 import { ObjectId } from "mongodb";
 
 const userCollection = async () => {
   const db = await connection();
   return db.collection("user");
+};
+
+const findAll = async () => {
+  const db = await userCollection();
+  return await db.find().toArray();
+};
+
+const createUser = async (user: IUser) => {
+  const db = await userCollection();
+  return await db.insertOne(user);
+};
+
+const updateUser = async (id: string, user: IUser) => {
+  const db = await userCollection();
+  const result = await db.updateOne({ _id: new ObjectId(id) }, { $set: user });
+
+  return result.modifiedCount;
 };
 
 const findByEmail = async (email: string) => {
@@ -14,9 +32,12 @@ const findByEmail = async (email: string) => {
 const deleteUser = async (id: string) => {
   const db = await userCollection();
   const collectionProductUser = await connection();
-  collectionProductUser.collection("product" + id).drop();
+
+  let result: any = await collectionProductUser.listCollections().toArray();
+  result = result.filter((item: any) => item.name === `product${id}`);
+  if (result.length > 0) collectionProductUser.dropCollection("product" + id);
   const { deletedCount } = await db.deleteOne({ _id: new ObjectId(id) });
   return deletedCount;
 };
 
-export default { findByEmail, deleteUser };
+export default { findByEmail, deleteUser, createUser, updateUser, findAll };
