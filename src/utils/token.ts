@@ -8,7 +8,7 @@ dotenv.config();
 const SECRET = process.env.TOKEN_SECRET as string;
 
 const jwtDefaultConfig: SignOptions = {
-  expiresIn: "30m",
+  expiresIn: "10",
   algorithm: "HS256",
 };
 
@@ -20,14 +20,14 @@ class Token {
   }
 
   public jwtGenerator(payload: IToken) {
-    return jwt.sign(payload, SECRET, this.jwtConfig);
+    return jwt.sign(payload, SECRET, { expiresIn: "30m" });
   }
 
   public async authenticateToken(token: string) {
     if (!token) throw new HttpException(401, "Sem acesso!");
 
     try {
-      const validateJwt = jwt.verify(token, SECRET, this.jwtConfig);
+      const validateJwt = jwt.verify(token, SECRET);
       return { validateJwt };
     } catch (error) {
       throw new HttpException(401, "Acesso inválido ou expirado!");

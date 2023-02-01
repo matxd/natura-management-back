@@ -40,7 +40,10 @@ productController.post(
         "data:image/png;base64," + new Buffer(image?.buffer).toString("base64");
       await productService.createProduct(product, token);
       return res.status(201).json({ message: "Produto salvo com sucesso!" });
-    } else return res.status(400).json({ message: "Algo deu errado!" });
+    } else {
+      await productService.createProduct(product, token);
+      return res.status(201).json({ message: "Produto salvo com sucesso!" });
+    }
   }
 );
 
