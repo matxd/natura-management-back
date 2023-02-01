@@ -17,7 +17,7 @@ const findAll = async (
 
   const totalItems = await db.countDocuments(name ? { name: name } : {});
   let totalPages = totalItems / size;
-  totalPages = totalPages < 1 ? 1 : totalPages;
+  totalPages = totalPages < 1 ? 1 : Math.ceil(totalPages);
   const items = await db
     .find(name ? { name: { $regex: name, $options: "i" } } : {}, {
       sort: "name",
