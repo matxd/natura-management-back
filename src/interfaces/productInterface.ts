@@ -4,5 +4,6 @@ export interface IProduct {
   amountStorage: number;
   price: string;
   image?: string;
+  expirationDate?: string;
   status: boolean;
 }
