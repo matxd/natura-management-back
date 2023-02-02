@@ -15,7 +15,9 @@ const findAll = async (
 ) => {
   const db = await productCollection(idUser);
 
-  const totalItems = await db.countDocuments(name ? { name: name } : {});
+  const totalItems = await db.countDocuments(
+    name ? { name: { $regex: name, $options: "i" } } : {}
+  );
   let totalPages = totalItems / size;
   totalPages = totalPages < 1 ? 1 : Math.ceil(totalPages);
   const items = await db
