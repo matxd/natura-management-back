@@ -20,7 +20,7 @@ class Token {
   }
 
   public jwtGenerator(payload: IToken) {
-    return jwt.sign(payload, SECRET, { expiresIn: "30m" });
+    return jwt.sign(payload, SECRET, { expiresIn: "60m" });
   }
 
   public async authenticateToken(token: string) {
