@@ -1,4 +1,4 @@
-import { IUser } from "./../interfaces/userInterface";
+import { IUser, IUserPut } from "./../interfaces/userInterface";
 import { connection } from "./connection";
 import { ObjectId } from "mongodb";
 
@@ -17,7 +17,7 @@ const createUser = async (user: IUser) => {
   return await db.insertOne(user);
 };
 
-const updateUser = async (id: string, user: IUser) => {
+const updateUser = async (id: string, user: IUserPut) => {
   const db = await userCollection();
   const result = await db.updateOne({ _id: new ObjectId(id) }, { $set: user });
 

@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { IUser } from "./../interfaces/userInterface";
+import { IUser, IUserPut } from "./../interfaces/userInterface";
 import HttpException from "../utils/httpException";
 import userModel from "../models/userModel";
 
@@ -14,13 +14,7 @@ const createUser = async (user: IUser) => {
   return await userModel.createUser(user);
 };
 
-const updateUser = async (id: string, user: IUser) => {
-  user.password = await bcrypt.hash(user.password, 10);
-
-  const emailAlreadyExists = await userModel.findByEmail(user.email);
-  if (emailAlreadyExists && emailAlreadyExists._id.toString() !== id)
-    throw new HttpException(404, "E-mail já é usado!");
-
+const updateUser = async (id: string, user: IUserPut) => {
   const result = await userModel.updateUser(id, user);
   if (result) return "Usuário editado!";
   else throw new HttpException(404, "Não foi possivel editar o usuário!");

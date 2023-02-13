@@ -16,10 +16,10 @@ userController.get(
 
 userController.post(
   "/cadastrar",
-  authenticateMiddleware,
   async (req: Request, res: Response): Promise<Response> => {
     const user: IUser = req.body;
     await userService.createUser(user);
+    console.log("oi");
     return res.status(201).json({ message: "Usuário criado!" });
   }
 );

@@ -4,3 +4,8 @@ export interface IUser {
   password: string;
   image?: string;
 }
+
+export interface IUserPut {
+  name: string;
+  image?: string;
+}
