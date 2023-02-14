@@ -12,6 +12,18 @@ const findAll = async () => {
   return await db.find().toArray();
 };
 
+const findLogged = async (idUser: string) => {
+  const db = await userCollection();
+  const user = await db.findOne({ _id: new ObjectId(idUser) });
+  const result = {
+    _id: user?._id,
+    name: user?.name,
+    image: user?.image,
+    email: user?.email,
+  };
+  return result;
+};
+
 const createUser = async (user: IUser) => {
   const db = await userCollection();
   return await db.insertOne(user);
@@ -40,4 +52,11 @@ const deleteUser = async (id: string) => {
   return deletedCount;
 };
 
-export default { findByEmail, deleteUser, createUser, updateUser, findAll };
+export default {
+  findByEmail,
+  deleteUser,
+  createUser,
+  updateUser,
+  findAll,
+  findLogged,
+};

@@ -12,7 +12,6 @@ productController.get(
     const page: string = req.query.page as string;
     const size: string = req.query.size as string;
     const name: string = req.query.name as string;
-    console.log("oi");
     if (!page || !size)
       return res.status(404).json({ message: "Nada encontrado!" });
     else {

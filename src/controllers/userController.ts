@@ -14,6 +14,16 @@ userController.get(
   }
 );
 
+userController.get(
+  "/logado",
+  authenticateMiddleware,
+  async (req: Request, res: Response): Promise<Response> => {
+    const token = req.headers.authorization || "";
+    const user = await userService.findLogged(token);
+    return res.status(201).json(user);
+  }
+);
+
 userController.post(
   "/cadastrar",
   async (req: Request, res: Response): Promise<Response> => {

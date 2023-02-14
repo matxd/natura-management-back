@@ -2,9 +2,14 @@ import bcrypt from "bcrypt";
 import { IUser, IUserPut } from "./../interfaces/userInterface";
 import HttpException from "../utils/httpException";
 import userModel from "../models/userModel";
+import { decodeToken } from "../utils/functions";
 
 const findAll = async () => {
   return await userModel.findAll();
+};
+
+const findLogged = async (token: string) => {
+  return await userModel.findLogged(decodeToken(token));
 };
 
 const createUser = async (user: IUser) => {
@@ -26,4 +31,4 @@ const deleteUser = async (id: string) => {
   return;
 };
 
-export default { deleteUser, createUser, updateUser, findAll };
+export default { deleteUser, createUser, updateUser, findAll, findLogged };
